@@ -4,36 +4,45 @@ Plug 'luochen1990/rainbow'
 Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'whatyouhide/vim-lengthmatters'
 Plug 'fatih/vim-go'
-Plug 'nathanaelkane/vim-indent-guides'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'ntpeters/vim-better-whitespace'
+Plug 'Yggdroot/indentLine'
 " color scheme
 Plug 'fratajczak/one-monokai-vim'
 call plug#end()
 
 " rainbow plugin
 let g:rainbow_active = 1
-let g:indent_guides_enable_on_vim_startup = 1
 
 set textwidth=120
-
 set nocompatible
-set termguicolors
+
+" Make it look good
 syntax on
 colorscheme one-monokai
-" Don't change the background
+set termguicolors
+" Fix windows terminal transparency
 hi Normal guibg=NONE ctermbg=NONE
-
-
+set tabstop=4
 set shiftwidth=4
 set softtabstop=4
-set smarttab
+filetype plugin on
 set expandtab
-filetype plugin indent on
 
-" powerline
+set number
 
-python3 from powerline.vim import setup as powerline_setup
-python3 powerline_setup()
-python3 del powerline_setup
-set laststatus=2 " Always display the statusline in all windows
-set showtabline=2 " Always display the tabline, even if there is only one tab
-set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusline)
+
+" Airline
+let g:airline_powerline_fonts = 1
+let g:airline_theme='powerlineish'
+
+" clang-format
+" map to <Leader>cf in C++ code
+autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
+autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
+
+let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+
+" yaml formatting
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
