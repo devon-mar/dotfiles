@@ -112,10 +112,11 @@ source $ZSH/oh-my-zsh.sh
 
 # Created by `pipx` on 2022-01-15 20:47:37
 export PATH="$PATH:$HOME/.local/bin"
+export PATH="$PATH:/usr/local/go/bin"
 
 
 # WSL SSH and GPG
-if [[ -z "${WSL_DISTRO_NAME}" ]]; then
+if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null; then
   export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
   if ! ss -a | grep -q "$SSH_AUTH_SOCK"; then
     rm -f "$SSH_AUTH_SOCK"
