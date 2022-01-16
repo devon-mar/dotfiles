@@ -8,6 +8,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'Yggdroot/indentLine'
+Plug 'editorconfig/editorconfig-vim'
 " color scheme
 Plug 'fratajczak/one-monokai-vim'
 call plug#end()

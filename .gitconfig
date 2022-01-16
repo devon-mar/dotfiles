@@ -1,6 +1,8 @@
 [user]
     name = Devon Mar
     email = devonm@mdmm.ca
+[core]
+    editor = vi
 [color]
     diff = auto
     status = auto
