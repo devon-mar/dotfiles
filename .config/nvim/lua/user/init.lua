@@ -2,6 +2,9 @@ local config = {
   plugins = {
     init = {
       ["declancm/cinnamon.nvim"] = { disable = true }
+    },
+    notify = {
+      background_colour = "#000000"
     }
   },
   highlights = {
