@@ -16,6 +16,7 @@ local config = {
       -- https://github.com/AstroNvim/AstroNvim/issues/8
       if vim.g.neovide == nil then
         highlights.Normal = {bg = C.none, ctermbg = C.none}
+        highlights.NormalNC = {bg = C.none, ctermbg = C.none}
         highlights.CursorColumn = {cterm = {}, ctermbg = C.none, ctermfg = C.none}
         highlights.CursorLineNr = {cterm = {}, ctermbg = C.none, ctermfg = C.none}
         highlights.LineNr = {}
