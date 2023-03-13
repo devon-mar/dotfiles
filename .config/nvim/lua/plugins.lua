@@ -48,11 +48,20 @@ return require("packer").startup(function(use)
     end
   }
 
-  use "cpea2506/one_monokai.nvim"
+  use {
+    "cpea2506/one_monokai.nvim",
+    config = function()
+      require("one_monokai").setup({ transparent = true })
+    end
+  }
 
   use {
     "nvim-treesitter/nvim-treesitter",
-    run = ":TSUpdate",
+    run = function()
+      if not packer_bootstrap then
+        vim.cmd("TSUpdate")
+      end
+    end,
     config = function()
       require("nvim-treesitter.configs").setup({
         ensure_installed = {
@@ -61,7 +70,7 @@ return require("packer").startup(function(use)
           "vim",
           "help",
           "rust",
-        "go",
+          "go",
         },
         auto_install = false,
         highlight = {
@@ -76,6 +85,10 @@ return require("packer").startup(function(use)
         },
       })
     end,
+  }
+  use {
+    "mrjones2014/nvim-ts-rainbow",
+    after = "nvim-treesitter"
   }
 
   use {
@@ -183,7 +196,6 @@ return require("packer").startup(function(use)
   }
   use "hrsh7th/cmp-nvim-lsp"
   use "hrsh7th/cmp-buffer"
-  use "mrjones2014/nvim-ts-rainbow"
 
   use {
     "luochen1990/rainbow",
@@ -203,6 +215,15 @@ return require("packer").startup(function(use)
   use {
     "nvim-telescope/telescope.nvim",
     requires = { {'nvim-lua/plenary.nvim'} },
+    config = function()
+      local telescope = require("telescope.builtin")
+      vim.keymap.set("n", "<leader>ff", telescope.find_files, {})
+      vim.keymap.set("n", "<leader>fg", telescope.live_grep, {})
+      vim.keymap.set("n", "<leader>fb", telescope.buffers, {})
+      vim.keymap.set("n", "<leader>fh", telescope.help_tags, {})
+      -- https://github.com/neovim/nvim-lspconfig/issues/1046#issuecomment-1396124472
+      vim.keymap.set("n", "<leader>le", vim.diagnostic.open_float, {})
+    end
   }
 
   use {
