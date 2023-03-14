@@ -142,6 +142,8 @@ if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null; then
   fi
 fi
 
+[ -f "$HOME/.zsh-local" ] && source "$HOME/.zsh-local"
+
 # NVM
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
