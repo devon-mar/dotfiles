@@ -29,20 +29,43 @@ return require("packer").startup(function(use)
   use {
     "neovim/nvim-lspconfig",
     config = function()
+      local on_attach = function(client, bufnr)
+        local bufopts = { noremap=true, silent=true, buffer=bufnr }
+        -- go to declaration of the symbol under the cursor
+        vim.keymap.set("n", "lD", vim.lsp.buf.declaration, bufopts)
+        -- go to definition of the symbol under the cursor
+        vim.keymap.set("n", "ld", vim.lsp.buf.definition, bufopts)
+        -- show code actions
+        vim.keymap.set("n", "<space>la", vim.lsp.buf.code_action, bufopts)
+        -- format
+        vim.keymap.set("n", "<space>lf", function() vim.lsp.buf.format { async = true } end, bufopts)
+        vim.keymap.set("n", "<space>lh", vim.lsp.buf.hover, bufopts)
+        vim.keymap.set("n", "<F2>", vim.lsp.buf.rename, bufopts)
+
+        local telescope = require("telescope.builtin")
+        vim.keymap.set("n", "<leader>ls", telescope.lsp_document_symbols, {})
+        vim.keymap.set("n", "<leader>lS", telescope.lsp_workspace_symbols, {})
+        vim.keymap.set("n", "<leader>lr", telescope.lsp_references, {})
+      end
+
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
       local lspconfig = require("lspconfig")
       lspconfig["rust_analyzer"].setup{
+        on_attach = on_attach,
         capabilities = capabilities
       }
       lspconfig["racket_langserver"].setup{
         cmd = { "xvfb-run", "racket", "--lib", "racket-langserver" },
+        on_attach = on_attach,
         capabilities = capabilities
       }
       lspconfig["gopls"].setup{
+        on_attach = on_attach,
         capabilities = capabilities
       }
       lspconfig["clangd"].setup{
+        on_attach = on_attach,
         capabilities = capabilities
       }
     end
@@ -216,13 +239,42 @@ return require("packer").startup(function(use)
     "nvim-telescope/telescope.nvim",
     requires = { {'nvim-lua/plenary.nvim'} },
     config = function()
+      require("telescope").setup({
+        pickers = {
+          git_bcommits = {
+            mappings = {
+              i = {
+                ["<CR>"] = function(prompt_bufnr)
+                  require("telescope.actions").close(prompt_bufnr)
+
+                  local ft = vim.bo.filetype
+
+                  local bufnr = vim.api.nvim_create_buf(false, true)
+                  local sha = require("telescope.actions.state").get_selected_entry().value
+                  local file = vim.fn.expand("%")
+                  local stdout = require("telescope.utils").get_os_command_output({"git", "--no-pager", "show", sha .. ":./" .. file}, vim.fn.getcwd())
+
+                  vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, stdout)
+                  vim.api.nvim_buf_set_name(bufnr, file .. "@" .. sha)
+                  vim.api.nvim_buf_set_option(bufnr, "readonly", true)
+                  vim.cmd("rightbelow vert sbuffer " .. bufnr)
+                  vim.bo.filetype = ft
+                end
+              }
+            }
+          }
+
+        }
+      })
       local telescope = require("telescope.builtin")
       vim.keymap.set("n", "<leader>ff", telescope.find_files, {})
       vim.keymap.set("n", "<leader>fg", telescope.live_grep, {})
       vim.keymap.set("n", "<leader>fb", telescope.buffers, {})
       vim.keymap.set("n", "<leader>fh", telescope.help_tags, {})
-      -- https://github.com/neovim/nvim-lspconfig/issues/1046#issuecomment-1396124472
-      vim.keymap.set("n", "<leader>le", vim.diagnostic.open_float, {})
+      vim.keymap.set("n", "<leader>gc", telescope.git_bcommits, {})
+
+      local config_dir = (vim.fn.has("win32") == 1) and "~/AppData/Local/nvim/lua" or "~/.config/nvim"
+      vim.api.nvim_create_user_command("EditConfig", function() telescope.find_files({ cwd = config_dir }) end, { nargs=0 })
     end
   }
 

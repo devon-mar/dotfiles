@@ -10,6 +10,10 @@ vim.opt.termguicolors = true
 
 vim.keymap.set("n", "<Leader>h", "<cmd>noh<cr>")
 vim.keymap.set("n", "<leader>y", '"+y<cr>')
+vim.keymap.set("v", "<leader>y", '"+y')
 vim.keymap.set("n", "<leader>p", '"+p<cr>')
+-- https://github.com/neovim/nvim-lspconfig/issues/1046#issuecomment-1396124472
+vim.keymap.set("n", "<leader>le", vim.diagnostic.open_float, {})
 
 require "plugins" 
+
