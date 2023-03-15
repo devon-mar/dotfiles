@@ -32,14 +32,14 @@ return require("packer").startup(function(use)
       local on_attach = function(client, bufnr)
         local bufopts = { noremap=true, silent=true, buffer=bufnr }
         -- go to declaration of the symbol under the cursor
-        vim.keymap.set("n", "lD", vim.lsp.buf.declaration, bufopts)
+        vim.keymap.set("n", "<leader>lD", vim.lsp.buf.declaration, bufopts)
         -- go to definition of the symbol under the cursor
-        vim.keymap.set("n", "ld", vim.lsp.buf.definition, bufopts)
+        vim.keymap.set("n", "<leader>ld", vim.lsp.buf.definition, bufopts)
         -- show code actions
-        vim.keymap.set("n", "<space>la", vim.lsp.buf.code_action, bufopts)
+        vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, bufopts)
         -- format
-        vim.keymap.set("n", "<space>lf", function() vim.lsp.buf.format { async = true } end, bufopts)
-        vim.keymap.set("n", "<space>lh", vim.lsp.buf.hover, bufopts)
+        vim.keymap.set("n", "<leader>lf", function() vim.lsp.buf.format { async = true } end, bufopts)
+        vim.keymap.set("n", "<leader>lh", vim.lsp.buf.hover, bufopts)
         vim.keymap.set("n", "<F2>", vim.lsp.buf.rename, bufopts)
 
         local telescope = require("telescope.builtin")
@@ -230,10 +230,11 @@ return require("packer").startup(function(use)
     ft = { "scheme" }
   }
   
-  -- use {
-  --   "gpanders/nvim-parinfer",
-  --   ft = { "scheme" }
-  -- }
+  use {
+    "gpanders/nvim-parinfer",
+    ft = { "scheme" },
+    disable = false
+  }
 
   use {
     "nvim-telescope/telescope.nvim",
