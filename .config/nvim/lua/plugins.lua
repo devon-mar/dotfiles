@@ -233,7 +233,7 @@ return require("packer").startup(function(use)
   use {
     "gpanders/nvim-parinfer",
     ft = { "scheme" },
-    disable = false
+    disable = true
   }
 
   use {
