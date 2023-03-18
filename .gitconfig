@@ -2,7 +2,7 @@
     name = Devon Mar
     email = devonm@mdmm.ca
 [core]
-    editor = vi
+    editor = nvim
 [color]
     diff = auto
     status = auto
