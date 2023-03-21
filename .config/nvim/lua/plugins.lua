@@ -260,6 +260,15 @@ return require("packer").startup(function(use)
                   vim.api.nvim_buf_set_option(bufnr, "readonly", true)
                   vim.cmd("rightbelow vert sbuffer " .. bufnr)
                   vim.bo.filetype = ft
+
+                  vim.api.nvim_create_autocmd("WinClosed", {
+                    buffer = bufnr,
+                    nested = true,
+                    once = true,
+                    callback = function()
+                      vim.api.nvim_buf_delete(bufnr, { force = true })
+                    end,
+                  })
                 end
               }
             }
