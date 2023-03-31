@@ -89,11 +89,12 @@ return require("packer").startup(function(use)
       require("nvim-treesitter.configs").setup({
         ensure_installed = {
           "c",
-          "lua",
-          "vim",
-          "help",
-          "rust",
           "go",
+          "help",
+          "lua",
+          "rust",
+          "vim",
+          "yaml",
         },
         auto_install = false,
         highlight = {
@@ -282,6 +283,7 @@ return require("packer").startup(function(use)
       vim.keymap.set("n", "<leader>fb", telescope.buffers, {})
       vim.keymap.set("n", "<leader>fh", telescope.help_tags, {})
       vim.keymap.set("n", "<leader>gc", telescope.git_bcommits, {})
+      vim.keymap.set("n", "<leader>lE", telescope.diagnostics, {})
 
       local config_dir = (vim.fn.has("win32") == 1) and "~/AppData/Local/nvim/lua" or "~/.config/nvim"
       vim.api.nvim_create_user_command("EditConfig", function() telescope.find_files({ cwd = config_dir }) end, { nargs=0 })
@@ -313,6 +315,13 @@ return require("packer").startup(function(use)
     tag = "*",
     config = function()
       require("git-conflict").setup()
+    end
+  }
+
+  use {
+    "numToStr/Comment.nvim",
+    config = function()
+        require("Comment").setup({ mappings = false })
     end
   }
   
