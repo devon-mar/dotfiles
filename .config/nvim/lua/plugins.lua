@@ -43,9 +43,9 @@ return require("packer").startup(function(use)
         vim.keymap.set("n", "<F2>", vim.lsp.buf.rename, bufopts)
 
         local telescope = require("telescope.builtin")
-        vim.keymap.set("n", "<leader>ls", telescope.lsp_document_symbols, {})
-        vim.keymap.set("n", "<leader>lS", telescope.lsp_workspace_symbols, {})
-        vim.keymap.set("n", "<leader>lr", telescope.lsp_references, {})
+        vim.keymap.set("n", "<leader>ls", telescope.lsp_document_symbols)
+        vim.keymap.set("n", "<leader>lS", telescope.lsp_workspace_symbols)
+        vim.keymap.set("n", "<leader>lr", telescope.lsp_references)
       end
 
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -278,12 +278,12 @@ return require("packer").startup(function(use)
         }
       })
       local telescope = require("telescope.builtin")
-      vim.keymap.set("n", "<leader>ff", telescope.find_files, {})
-      vim.keymap.set("n", "<leader>fg", telescope.live_grep, {})
-      vim.keymap.set("n", "<leader>fb", telescope.buffers, {})
-      vim.keymap.set("n", "<leader>fh", telescope.help_tags, {})
-      vim.keymap.set("n", "<leader>gc", telescope.git_bcommits, {})
-      vim.keymap.set("n", "<leader>lE", telescope.diagnostics, {})
+      vim.keymap.set("n", "<leader>ff", telescope.find_files)
+      vim.keymap.set("n", "<leader>fg", telescope.live_grep)
+      vim.keymap.set("n", "<leader>fb", telescope.buffers)
+      vim.keymap.set("n", "<leader>fh", telescope.help_tags)
+      vim.keymap.set("n", "<leader>gc", telescope.git_bcommits)
+      vim.keymap.set("n", "<leader>lE", telescope.diagnostics)
 
       local config_dir = (vim.fn.has("win32") == 1) and "~/AppData/Local/nvim/lua" or "~/.config/nvim"
       vim.api.nvim_create_user_command("EditConfig", function() telescope.find_files({ cwd = config_dir }) end, { nargs=0 })
@@ -322,6 +322,14 @@ return require("packer").startup(function(use)
     "numToStr/Comment.nvim",
     config = function()
         require("Comment").setup({ mappings = false })
+        vim.keymap.set("n", "<leader>/", function() require("Comment.api").toggle.linewise.count(vim.v.count > 0 and vim.v.count or 1) end)
+
+        -- From the docs
+        local esc = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
+        vim.keymap.set("x", "<leader>/", function()
+          vim.api.nvim_feedkeys(esc, "nx", false)
+          require("Comment.api").toggle.linewise(vim.fn.visualmode())
+        end)
     end
   }
   
