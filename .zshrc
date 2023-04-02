@@ -142,7 +142,7 @@ if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null; then
   fi
 fi
 
-[ -f "$HOME/.zsh-local" ] && source "$HOME/.zsh-local"
+[ -f "$HOME/.zshrc-local" ] && source "$HOME/.zshrc-local"
 
 # NVM
 export NVM_DIR="$HOME/.nvm"
