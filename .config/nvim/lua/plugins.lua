@@ -91,6 +91,7 @@ return require("packer").startup(function(use)
           "c",
           "go",
           "help",
+          "json",
           "lua",
           "rust",
           "vim",
