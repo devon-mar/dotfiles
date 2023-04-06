@@ -49,8 +49,15 @@ return require("packer").startup(function(use)
         vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, bufopts)
         -- format
         vim.keymap.set("n", "<leader>lf", function() vim.lsp.buf.format { async = true } end, bufopts)
-        vim.keymap.set("n", "<leader>lh", vim.lsp.buf.hover, bufopts)
+        vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
         vim.keymap.set("n", "<F2>", vim.lsp.buf.rename, bufopts)
+        vim.keymap.set("n", "<leader>le", function()
+          vim.diagnostic.open_float({
+            focusable = false,
+            border = "rounded",
+            source = "always",
+          })
+        end, bufopts)
 
         local telescope = require("telescope.builtin")
         vim.keymap.set("n", "<leader>ls", telescope.lsp_document_symbols)
