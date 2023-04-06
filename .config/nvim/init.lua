@@ -12,10 +12,25 @@ vim.keymap.set("n", "<Leader>h", "<cmd>noh<cr>")
 vim.keymap.set("n", "<leader>y", '"+y')
 vim.keymap.set("v", "<leader>y", '"+y')
 vim.keymap.set("n", "<leader>p", '"+p')
--- https://github.com/neovim/nvim-lspconfig/issues/1046#issuecomment-1396124472
-vim.keymap.set("n", "<leader>le", vim.diagnostic.open_float, {})
 --- https://stackoverflow.com/questions/676600/vim-search-and-replace-selected-text
 vim.keymap.set("v", "<C-r>", '"hy:%s/<C-r>h//g<left><left>')
 
 require "plugins" 
 
+vim.filetype.add({pattern={["~/repos/workstation/.*.yml"] = "yaml.ansible"}})
+
+--- https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization#customizing-how-diagnostics-are-displayed
+local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+for type, icon in pairs(signs) do
+  local hl = "DiagnosticSign" .. type
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+end
+
+vim.diagnostic.config({
+  virtual_text = {
+    source = "if_many",
+  },
+  float = {
+    source = "if_many",
+  },
+})
