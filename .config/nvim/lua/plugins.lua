@@ -129,6 +129,7 @@ return require("packer").startup(function(use)
           "help",
           "json",
           "lua",
+          "python",
           "rust",
           "vim",
           "yaml",
@@ -418,6 +419,15 @@ return require("packer").startup(function(use)
   }
 
   use "L3MON4D3/LuaSnip"
+
+  use {
+    "lukas-reineke/indent-blankline.nvim",
+    config = function()
+      require("indent_blankline").setup({
+        char_list = {"|", "¦", "┆", "┊"}
+      })
+    end,
+  }
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
