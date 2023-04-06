@@ -207,7 +207,7 @@ return require("packer").startup(function(use)
       cmp.setup({
         formatting = {
           format = function(entry, vim_item)
-            vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind)
+            vim_item.kind = string.format('%s', kind_icons[vim_item.kind])
             vim_item.menu = ({
               buffer = "[Buffer]",
               nvim_lsp = "[LSP]",
@@ -292,11 +292,27 @@ return require("packer").startup(function(use)
   }
 
   use {
+    "nvim-telescope/telescope-fzf-native.nvim",
+    run = "make"
+  }
+  use {
     "nvim-telescope/telescope.nvim",
     requires = { {'nvim-lua/plenary.nvim'} },
     config = function()
       require("telescope").setup({
+        extensions = {
+          fzf = {
+            fuzzy = true,
+            override_generic_sorter = true,
+            override_file_sorter = true,
+            case_mode = "smart_case",
+          }
+        },
+        defaults = {
+          file_ignore_patterns = {"^.git/"},
+        },
         pickers = {
+          find_files = { hidden = true },
           git_bcommits = {
             mappings = {
               i = {
@@ -331,6 +347,7 @@ return require("packer").startup(function(use)
 
         }
       })
+      require("telescope").load_extension("fzf")
       local telescope = require("telescope.builtin")
       vim.keymap.set("n", "<leader>ff", telescope.find_files)
       vim.keymap.set("n", "<leader>fg", telescope.live_grep)
