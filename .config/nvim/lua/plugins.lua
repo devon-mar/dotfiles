@@ -164,6 +164,10 @@ return require("packer").startup(function(use)
         return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match('%s') == nil
       end
 
+      -- Auto pairs
+      local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+      cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
+
       -- https://github.com/hrsh7th/nvim-cmp/wiki/Menu-Appearance#menu-type
       local kind_icons = {
         Text = "",
@@ -373,7 +377,15 @@ return require("packer").startup(function(use)
         ft.racket = { ";;%s", "#|%s|#" }
     end
   }
-  
+
+  use "pearofducks/ansible-vim"
+
+  use {
+    "windwp/nvim-autopairs",
+    config = function()
+      require("nvim-autopairs").setup()
+    end,
+  }
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
