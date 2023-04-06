@@ -78,6 +78,25 @@ return require("packer").startup(function(use)
         on_attach = on_attach,
         capabilities = capabilities
       }
+      lspconfig["ansiblels"].setup{
+        on_attach = on_attach,
+        capabilities = capabilities
+      }
+      lspconfig["yamlls"].setup{
+        on_attach = on_attach,
+        capabilities = capabilities,
+        settings = {
+          yaml = {
+            schemas = {
+              ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*"
+            }
+          }
+        },
+      }
+      lspconfig["pyright"].setup{
+        on_attach = on_attach,
+        capabilities = capabilities
+      }
     end
   }
 
@@ -293,6 +312,7 @@ return require("packer").startup(function(use)
       vim.keymap.set("n", "<leader>fg", telescope.live_grep)
       vim.keymap.set("n", "<leader>fb", telescope.buffers)
       vim.keymap.set("n", "<leader>fh", telescope.help_tags)
+      vim.keymap.set("n", "<leader>ft", telescope.filetypes)
       vim.keymap.set("n", "<leader>gc", telescope.git_bcommits)
       vim.keymap.set("n", "<leader>lE", telescope.diagnostics)
 
@@ -341,6 +361,9 @@ return require("packer").startup(function(use)
           vim.api.nvim_feedkeys(esc, "nx", false)
           require("Comment.api").toggle.linewise(vim.fn.visualmode())
         end)
+
+        local ft = require("Comment.ft")
+        ft.racket = { ";;%s", "#|%s|#" }
     end
   }
   
