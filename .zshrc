@@ -113,6 +113,7 @@ source $ZSH/oh-my-zsh.sh
 # Created by `pipx` on 2022-01-15 20:47:37
 export PATH="$PATH:$HOME/.local/bin"
 export PATH="$PATH:/usr/local/go/bin"
+export PATH="$PATH:$HOME/go/bin"
 
 
 # WSL SSH and GPG
