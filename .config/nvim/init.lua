@@ -20,7 +20,7 @@ require "plugins"
 vim.filetype.add({pattern={["~/repos/workstation/.*.yml"] = "yaml.ansible"}})
 
 --- Based on https://unix.stackexchange.com/questions/224771/what-is-the-format-of-the-default-statusline
-vim.opt.statusline = [[%<%f %h%m%r%y%=%-14.(%l,%c%V%)\ %P]]
+vim.opt.statusline = [[%<%f %h%m%r%y%=%-14.(%l,%c%V%) %P]]
 
 --- https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization#customizing-how-diagnostics-are-displayed
 local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
