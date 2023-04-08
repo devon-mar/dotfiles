@@ -108,6 +108,22 @@ return require("packer").startup(function(use)
   }
 
   use {
+    "jose-elias-alvarez/null-ls.nvim",
+    requires = {"nvim-lua/plenary.nvim"},
+    config = function()
+      local null_ls = require("null-ls")
+      null_ls.setup({
+        sources = {
+          null_ls.builtins.formatting.isort,
+          null_ls.builtins.formatting.black,
+
+          null_ls.builtins.code_actions.gitsigns,
+        },
+      })
+    end,
+  }
+
+  use {
     "cpea2506/one_monokai.nvim",
     config = function()
       require("one_monokai").setup({ transparent = true })
@@ -130,6 +146,7 @@ return require("packer").startup(function(use)
           "json",
           "lua",
           "python",
+          "racket",
           "rust",
           "vim",
           "yaml",
@@ -277,11 +294,6 @@ return require("packer").startup(function(use)
   use "hrsh7th/cmp-path"
 
   use {
-    "luochen1990/rainbow",
-    ft = { "scheme" }
-  }
-
-  use {
     "benknoble/vim-racket",
     ft = { "scheme" }
   }
@@ -415,6 +427,15 @@ return require("packer").startup(function(use)
     "windwp/nvim-autopairs",
     config = function()
       require("nvim-autopairs").setup()
+      local add_not_ft = function(rule, ft)
+        if rule.not_filetypes == nil then
+          rule.not_filetypes = {ft}
+        else
+          table.insert(rule.not_filetypes, ft)
+        end
+      end
+      add_not_ft(require("nvim-autopairs").get_rule("'")[1], "racket")
+      add_not_ft(require("nvim-autopairs").get_rule("`"), "racket")
     end,
   }
 
