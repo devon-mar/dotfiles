@@ -115,6 +115,7 @@ export PATH="$PATH:$HOME/.local/bin"
 export PATH="$PATH:/usr/local/go/bin"
 export PATH="$PATH:$HOME/go/bin"
 
+[ -f ~/.cargo/env ] && source $HOME/.cargo/env
 
 # WSL SSH and GPG
 if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null; then
