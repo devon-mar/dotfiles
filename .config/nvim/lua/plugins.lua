@@ -11,6 +11,14 @@ end
 
 local packer_bootstrap = ensure_packer()
 
+function on_attach_common(client, bufnr)
+  local bufopts = { noremap=true, silent=true, buffer=bufnr }
+  -- format
+  vim.keymap.set("n", "<leader>lf", function() vim.lsp.buf.format { async = true } end, bufopts)
+  -- show code actions
+  vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, bufopts)
+end
+
 return require("packer").startup(function(use)
   use {
     "wbthomason/packer.nvim",
@@ -40,15 +48,12 @@ return require("packer").startup(function(use)
     "neovim/nvim-lspconfig",
     config = function()
       local on_attach = function(client, bufnr)
+        on_attach(client, bufnr)
         local bufopts = { noremap=true, silent=true, buffer=bufnr }
         -- go to declaration of the symbol under the cursor
         vim.keymap.set("n", "<leader>lD", vim.lsp.buf.declaration, bufopts)
         -- go to definition of the symbol under the cursor
         vim.keymap.set("n", "<leader>ld", vim.lsp.buf.definition, bufopts)
-        -- show code actions
-        vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, bufopts)
-        -- format
-        vim.keymap.set("n", "<leader>lf", function() vim.lsp.buf.format { async = true } end, bufopts)
         vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
         vim.keymap.set("n", "<F2>", vim.lsp.buf.rename, bufopts)
         vim.keymap.set("n", "<leader>le", function()
@@ -113,11 +118,14 @@ return require("packer").startup(function(use)
     config = function()
       local null_ls = require("null-ls")
       null_ls.setup({
+        on_attach = on_attach_common,
         sources = {
           null_ls.builtins.formatting.isort,
           null_ls.builtins.formatting.black,
 
           null_ls.builtins.code_actions.gitsigns,
+
+          null_ls.builtins.formatting.prettier,
         },
       })
     end,
@@ -456,6 +464,18 @@ return require("packer").startup(function(use)
         char_list = {"|", "¦", "┆", "┊"}
       })
     end,
+  }
+
+  use {
+    "j-hui/fidget.nvim",
+    config = function()
+      require("fidget").setup({
+        window = {
+          --- transparent
+          blend = 0
+        }
+      })
+    end
   }
 
   -- Automatically set up your configuration after cloning packer.nvim
