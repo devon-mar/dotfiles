@@ -114,6 +114,7 @@ source $ZSH/oh-my-zsh.sh
 export PATH="$PATH:$HOME/.local/bin"
 export PATH="$PATH:/usr/local/go/bin"
 export PATH="$PATH:$HOME/go/bin"
+export PATH="$PATH:/usr/local/neovim/bin"
 
 [ -f ~/.cargo/env ] && source "$HOME/.cargo/env"
 
