@@ -212,9 +212,6 @@ return require("packer").startup(function(use)
         },
         rainbow = {
           enable = true,
-          disable = { "html" },
-          extended_mode = false,
-          max_file_lines = nil,
         },
       })
     end,
