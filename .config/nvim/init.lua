@@ -15,7 +15,6 @@ vim.keymap.set("n", "<leader>p", '"+p')
 --- https://stackoverflow.com/questions/676600/vim-search-and-replace-selected-text
 vim.keymap.set("v", "<C-r>", '"hy:%s/<C-r>h//g<left><left>')
 
-
 vim.cmd([[
   augroup source_init
     autocmd!
@@ -23,9 +22,9 @@ vim.cmd([[
   augroup end
 ]])
 
-require "plugins" 
+require("plugins")
 
-vim.filetype.add({pattern={["~/repos/workstation/.*.yml"] = "yaml.ansible"}})
+vim.filetype.add({ pattern = { ["~/repos/workstation/.*.yml"] = "yaml.ansible" } })
 
 --- Based on https://unix.stackexchange.com/questions/224771/what-is-the-format-of-the-default-statusline
 vim.opt.statusline = [[%<%f %y%h%m%r%=%{get(b:,"gitsigns_status", "")} %-14.(%l,%c%V%) %P]]
@@ -41,5 +40,5 @@ vim.diagnostic.config({
   virtual_text = {
     source = "if_many",
   },
-  float = { source = "if_many", },
+  float = { source = "if_many" },
 })
