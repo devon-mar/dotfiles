@@ -40,7 +40,17 @@ return require("packer").startup(function(use)
         stages = "fade"
       })
       vim.notify = require("notify")
-      
+      vim.lsp.handlers['window/showMessage'] = function(_, result, ctx)
+        local client = vim.lsp.get_client_by_id(ctx.client_id)
+        local lvl = ({ "ERROR", "WARN", "INFO", "DEBUG" })[result.type]
+        notify(result.message, lvl, {
+          title = "LSP | " .. client.name,
+          timeout = 10000,
+          keep = function()
+            return lvl == "ERROR" or lvl == "WARN"
+          end,
+        })
+      end
     end,
   }
 
@@ -48,8 +58,9 @@ return require("packer").startup(function(use)
     "neovim/nvim-lspconfig",
     config = function()
       local on_attach = function(client, bufnr)
-        on_attach(client, bufnr)
+        on_attach_common(client, bufnr)
         local bufopts = { noremap=true, silent=true, buffer=bufnr }
+        vim.keymap.set("n", "<leader>le", vim.diagnostic.open_float, bufopts)
         -- go to declaration of the symbol under the cursor
         vim.keymap.set("n", "<leader>lD", vim.lsp.buf.declaration, bufopts)
         -- go to definition of the symbol under the cursor
@@ -68,6 +79,36 @@ return require("packer").startup(function(use)
         vim.keymap.set("n", "<leader>ls", telescope.lsp_document_symbols)
         vim.keymap.set("n", "<leader>lS", telescope.lsp_workspace_symbols)
         vim.keymap.set("n", "<leader>lr", telescope.lsp_references)
+
+        --- https://github.com/golang/go/issues/54531#issuecomment-1464982242
+        if client.name == "gopls" and not client.server_capabilities.semanticTokensProvider then
+          local semantic = client.config.capabilities.textDocument.semanticTokens
+          client.server_capabilities.semanticTokensProvider = {
+            full = true,
+            legend = {tokenModifiers = semantic.tokenModifiers, tokenTypes = semantic.tokenTypes},
+            range = true,
+          }
+        end
+
+      end
+
+      --- border stuff
+      -- https://github.com/neovim/neovim/blob/2b35de386ee8854e1012feb4a6cc53b099220677/src/nvim/api/win_config.c#L452
+      local border = {
+            {"╭", "FloatBorder"},
+            {"─", "FloatBorder"},
+            {"╮", "FloatBorder"},
+            {"│", "FloatBorder"},
+            {"╯", "FloatBorder"},
+            {"─", "FloatBorder"},
+            {"╰", "FloatBorder"},
+            {"│", "FloatBorder"},
+      }
+      local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+      function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+        opts = opts or {}
+        opts.border = opts.border or border
+        return orig_util_open_floating_preview(contents, syntax, opts, ...)
       end
 
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -84,7 +125,12 @@ return require("packer").startup(function(use)
       }
       lspconfig["gopls"].setup{
         on_attach = on_attach,
-        capabilities = capabilities
+        capabilities = capabilities,
+        settings = {
+          gopls = {
+            semanticTokens = true
+          }
+        }
       }
       lspconfig["clangd"].setup{
         on_attach = on_attach,
@@ -174,7 +220,7 @@ return require("packer").startup(function(use)
     end,
   }
   use {
-    "mrjones2014/nvim-ts-rainbow",
+    "HiPhish/nvim-ts-rainbow2",
     after = "nvim-treesitter"
   }
 
