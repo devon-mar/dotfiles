@@ -18,7 +18,7 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     dependencies = { "HiPhish/nvim-ts-rainbow2" },
-    event = { "BufReadPost", "BufNewFile" },
+    event = { "BufReadPost" },
     build = function()
       require("nvim-treesitter.install").update({ with_sync = true })
     end,
@@ -44,6 +44,9 @@ return {
         enable = true,
       },
     },
+    config = function(_, opts)
+      require("nvim-treesitter.configs").setup(opts)
+    end,
   },
   {
     "rcarriga/nvim-notify",
@@ -496,7 +499,7 @@ return {
   },
   {
     "lukas-reineke/indent-blankline.nvim",
-    event = "VeryLazy",
+    event = { "BufReadPost" },
     config = function()
       require("indent_blankline").setup({
         char_list = { "|", "¦", "┆", "┊" },
@@ -514,9 +517,5 @@ return {
         },
       })
     end,
-  },
-  {
-    "benknoble/vim-racket",
-    ft = { "racket" },
   },
 }

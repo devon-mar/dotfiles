@@ -20,6 +20,5 @@
   "one_monokai.nvim": { "branch": "main", "commit": "057fc3488a3be1a978315c746ee2ed94592fef84" },
   "plenary.nvim": { "branch": "master", "commit": "9ac3e9541bbabd9d73663d757e4fe48a675bb054" },
   "telescope-fzf-native.nvim": { "branch": "main", "commit": "580b6c48651cabb63455e97d7e131ed557b8c7e2" },
-  "telescope.nvim": { "branch": "master", "commit": "6258d50b09f9ae087317e392efe7c05a7323492d" },
-  "vim-racket": { "branch": "master", "commit": "c21569c65fe690c7ad6e88313df8a642fc6531ec" }
+  "telescope.nvim": { "branch": "master", "commit": "6258d50b09f9ae087317e392efe7c05a7323492d" }
 }
