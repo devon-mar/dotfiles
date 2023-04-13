@@ -15,15 +15,6 @@ vim.keymap.set("n", "<leader>p", '"+p')
 --- https://stackoverflow.com/questions/676600/vim-search-and-replace-selected-text
 vim.keymap.set("v", "<C-r>", '"hy:%s/<C-r>h//g<left><left>')
 
-vim.cmd([[
-  augroup source_init
-    autocmd!
-    autocmd BufWritePost init.lua source <afile>
-  augroup end
-]])
-
-require("plugins")
-
 vim.filetype.add({ pattern = { ["~/repos/workstation/.*.yml"] = "yaml.ansible" } })
 
 --- Based on https://unix.stackexchange.com/questions/224771/what-is-the-format-of-the-default-statusline
@@ -41,4 +32,21 @@ vim.diagnostic.config({
     source = "if_many",
   },
   float = { source = "if_many" },
+})
+
+-- lazy bootstrap
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+require("lazy").setup("plugins", {
+  border = "rounded"
 })

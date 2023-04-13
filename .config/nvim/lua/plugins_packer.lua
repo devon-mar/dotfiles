@@ -1,3 +1,16 @@
+local ensure_packer = function()
+  local fn = vim.fn
+  local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
+  if fn.empty(fn.glob(install_path)) > 0 then
+    fn.system({ "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", install_path })
+    vim.cmd([[packadd packer.nvim]])
+    return true
+  end
+  return false
+end
+
+local packer_bootstrap = ensure_packer()
+
 function on_attach_common(client, bufnr)
   local bufopts = { noremap = true, silent = true, buffer = bufnr }
   -- format
@@ -8,46 +21,21 @@ function on_attach_common(client, bufnr)
   vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, bufopts)
 end
 
-return {
-  {
-    "cpea2506/one_monokai.nvim",
-    lazy = false,
-    priority = 1000,
-    opts = { transparent = true },
-  },
-  {
-    "nvim-treesitter/nvim-treesitter",
-    dependencies = { "HiPhish/nvim-ts-rainbow2" },
-    event = { "BufReadPost", "BufNewFile" },
-    build = function()
-      require("nvim-treesitter.install").update({ with_sync = true })
+return require("packer").startup(function(use)
+  use({
+    "wbthomason/packer.nvim",
+    config = function()
+      vim.cmd([[
+        augroup packer_user_config
+          autocmd!
+          autocmd BufWritePost plugins.lua source <afile> | PackerCompile
+        augroup end
+      ]])
     end,
-    opts = {
-      ensure_installed = {
-        "c",
-        "go",
-        "json",
-        "lua",
-        "python",
-        "racket",
-        "rust",
-        "vim",
-        "vimdoc",
-        "yaml",
-      },
-      auto_install = false,
-      highlight = {
-        enable = true,
-        additional_vim_regex_highlighting = false,
-      },
-      rainbow = {
-        enable = true,
-      },
-    },
-  },
-  {
+  })
+
+  use({
     "rcarriga/nvim-notify",
-    event = "VeryLazy",
     config = function()
       require("notify").setup({
         background_colour = "#000000",
@@ -66,10 +54,10 @@ return {
         })
       end
     end,
-  },
-  {
+  })
+
+  use({
     "neovim/nvim-lspconfig",
-    event = { "BufReadPre", "BufNewFile" },
     config = function()
       local on_attach = function(client, bufnr)
         on_attach_common(client, bufnr)
@@ -88,6 +76,11 @@ return {
             source = "always",
           })
         end, bufopts)
+
+        local telescope = require("telescope.builtin")
+        vim.keymap.set("n", "<leader>ls", telescope.lsp_document_symbols)
+        vim.keymap.set("n", "<leader>lS", telescope.lsp_workspace_symbols)
+        vim.keymap.set("n", "<leader>lr", telescope.lsp_references)
 
         --- https://github.com/golang/go/issues/54531#issuecomment-1464982242
         if client.name == "gopls" and not client.server_capabilities.semanticTokensProvider then
@@ -164,49 +157,73 @@ return {
         capabilities = capabilities,
       })
     end,
-  },
-  {
+  })
+
+  use({
     "jose-elias-alvarez/null-ls.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    ft = { "python", "yaml", "json", "lua" },
+    requires = { "nvim-lua/plenary.nvim" },
     config = function()
       local null_ls = require("null-ls")
       null_ls.setup({
-        on_attach = function(client, bufnr)
-          on_attach_common(client, bufnr)
-          if client.supports_method("textDocument/formatting") then
-            vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-            vim.api.nvim_create_autocmd("BufWritePre", {
-              group = augroup,
-              buffer = bufnr,
-              callback = function()
-                vim.lsp.buf.format({ bufnr = bufnr })
-              end,
-            })
-          end
-        end,
+        on_attach = on_attach_common,
         sources = {
-          --- python
           null_ls.builtins.formatting.isort,
           null_ls.builtins.formatting.black,
 
-          -- lua
-          null_ls.builtins.formatting.stylua,
+          null_ls.builtins.code_actions.gitsigns,
 
           null_ls.builtins.formatting.prettier,
         },
       })
     end,
-  },
-  {
+  })
+
+  use({
+    "cpea2506/one_monokai.nvim",
+    config = function()
+      require("one_monokai").setup({ transparent = true })
+    end,
+  })
+
+  use({
+    "nvim-treesitter/nvim-treesitter",
+    run = function()
+      if not packer_bootstrap then
+        vim.cmd("TSUpdate")
+      end
+    end,
+    config = function()
+      require("nvim-treesitter.configs").setup({
+        ensure_installed = {
+          "c",
+          "go",
+          "json",
+          "lua",
+          "python",
+          "racket",
+          "rust",
+          "vim",
+          "vimdoc",
+          "yaml",
+        },
+        auto_install = false,
+        highlight = {
+          enable = true,
+          additional_vim_regex_highlighting = false,
+        },
+        rainbow = {
+          enable = true,
+        },
+      })
+    end,
+  })
+  use({
+    "HiPhish/nvim-ts-rainbow2",
+    after = "nvim-treesitter",
+  })
+
+  use({
     "hrsh7th/nvim-cmp",
-    dependencies = {
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
-      "L3MON4D3/LuaSnip",
-    },
-    event = "InsertEnter",
     config = function()
       local cmp = require("cmp")
       local luasnip = require("luasnip")
@@ -326,32 +343,29 @@ return {
         end,
       })
     end,
-  },
-  {
+  })
+  use("hrsh7th/cmp-nvim-lsp")
+  use("hrsh7th/cmp-buffer")
+  use("hrsh7th/cmp-path")
+
+  use({
+    "benknoble/vim-racket",
+    ft = { "scheme" },
+  })
+
+  use({
+    "gpanders/nvim-parinfer",
+    ft = { "scheme" },
+    disable = true,
+  })
+
+  use({
     "nvim-telescope/telescope-fzf-native.nvim",
-    lazy = true,
-    build = "make",
-  },
-  {
+    run = "make",
+  })
+  use({
     "nvim-telescope/telescope.nvim",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope-fzf-native.nvim",
-    },
-    cmd = { "Telescope", "EditConfig" },
-    keys = {
-      { "<leader>fz", "<cmd>Telescope find_files<cr>" },
-      { "<leader>ff", "<cmd>Telescope find_files<cr>" },
-      { "<leader>fg", "<cmd>Telescope live_grep<cr>" },
-      { "<leader>fb", "<cmd>Telescope buffers<cr>" },
-      { "<leader>fh", "<cmd>Telescope help_tags<cr>" },
-      { "<leader>ft", "<cmd>Telescope filetypes<cr>" },
-      { "<leader>gc", "<cmd>Telescope git_bcommits<cr>" },
-      { "<leader>lE", "<cmd>Telescope diagnostics<cr>" },
-      { "<leader>ls", "<cmd>Telescope lsp_document_symbols" },
-      { "<leader>lS", "<cmd>Telescope lsp_workspace_symbols" },
-      { "<leader>lr", "<cmd>Telescope lsp_references" },
-    },
+    requires = { { "nvim-lua/plenary.nvim" } },
     config = function()
       require("telescope").setup({
         extensions = {
@@ -366,14 +380,7 @@ return {
           file_ignore_patterns = { "^.git/" },
         },
         pickers = {
-          find_files = {
-            hidden = true,
-            file_ignore_patterns = {
-              ".git/",
-              ".venv/",
-              "__pycache__/",
-            },
-          },
+          find_files = { hidden = true },
           git_bcommits = {
             mappings = {
               i = {
@@ -412,20 +419,23 @@ return {
       })
       require("telescope").load_extension("fzf")
       local telescope = require("telescope.builtin")
+      vim.keymap.set("n", "<leader>ff", telescope.find_files)
+      vim.keymap.set("n", "<leader>fg", telescope.live_grep)
+      vim.keymap.set("n", "<leader>fb", telescope.buffers)
+      vim.keymap.set("n", "<leader>fh", telescope.help_tags)
+      vim.keymap.set("n", "<leader>ft", telescope.filetypes)
+      vim.keymap.set("n", "<leader>gc", telescope.git_bcommits)
+      vim.keymap.set("n", "<leader>lE", telescope.diagnostics)
+
       local config_dir = (vim.fn.has("win32") == 1) and "~/AppData/Local/nvim/lua" or "~/.config/nvim"
       vim.api.nvim_create_user_command("EditConfig", function()
         telescope.find_files({ cwd = config_dir })
       end, { nargs = 0 })
     end,
-  },
-  {
+  })
+
+  use({
     "lewis6991/gitsigns.nvim",
-    event = "BufReadPost",
-    keys = {
-      { "<leader>gp", "<cmd>Gitsigns preview_hunk<cr>" },
-      { "<leader>gr", "<cmd>Gitsigns reset_hunk<cr>" },
-      { "<leader>gd", "<cmd>Gitsigns diffthis<cr>" },
-    },
     config = function()
       require("gitsigns").setup({
         signcolumn = false,
@@ -446,17 +456,28 @@ return {
         end,
       })
     end,
-  },
-  {
+  })
+
+  use({
+    "akinsho/toggleterm.nvim",
+    tag = "*",
+    config = function()
+      require("toggleterm").setup({
+        direction = "float",
+      })
+    end,
+  })
+
+  use({
     "akinsho/git-conflict.nvim",
-    event = "VeryLazy",
+    tag = "*",
     config = function()
       require("git-conflict").setup()
     end,
-  },
-  {
+  })
+
+  use({
     "numToStr/Comment.nvim",
-    event = "VeryLazy",
     config = function()
       require("Comment").setup({ mappings = false })
       vim.keymap.set("n", "<leader>/", function()
@@ -473,14 +494,12 @@ return {
       local ft = require("Comment.ft")
       ft.racket = { ";;%s", "#|%s|#" }
     end,
-  },
-  {
-    "pearofducks/ansible-vim",
-    ft = { "yaml.ansible" },
-  },
-  {
+  })
+
+  use("pearofducks/ansible-vim")
+
+  use({
     "windwp/nvim-autopairs",
-    event = "InsertEnter",
     config = function()
       require("nvim-autopairs").setup()
       local add_not_ft = function(rule, ft)
@@ -493,19 +512,21 @@ return {
       add_not_ft(require("nvim-autopairs").get_rule("'")[1], "racket")
       add_not_ft(require("nvim-autopairs").get_rule("`"), "racket")
     end,
-  },
-  {
+  })
+
+  use("L3MON4D3/LuaSnip")
+
+  use({
     "lukas-reineke/indent-blankline.nvim",
-    event = "VeryLazy",
     config = function()
       require("indent_blankline").setup({
         char_list = { "|", "¦", "┆", "┊" },
       })
     end,
-  },
-  {
+  })
+
+  use({
     "j-hui/fidget.nvim",
-    event = "LspAttach",
     config = function()
       require("fidget").setup({
         window = {
@@ -514,9 +535,11 @@ return {
         },
       })
     end,
-  },
-  {
-    "benknoble/vim-racket",
-    ft = { "racket" },
-  },
-}
+  })
+
+  -- Automatically set up your configuration after cloning packer.nvim
+  -- Put this at the end after all plugins
+  if packer_bootstrap then
+    require("packer").sync()
+  end
+end)
