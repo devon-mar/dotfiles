@@ -18,7 +18,7 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     dependencies = { "HiPhish/nvim-ts-rainbow2" },
-    event = { "BufReadPost" },
+    event = { "BufReadPost", "BufNewFile" },
     build = function()
       require("nvim-treesitter.install").update({ with_sync = true })
     end,
@@ -423,7 +423,7 @@ return {
   },
   {
     "lewis6991/gitsigns.nvim",
-    event = "BufReadPost",
+    event = { "BufReadPost", "BufNewFile" },
     keys = {
       { "<leader>gp", "<cmd>Gitsigns preview_hunk<cr>" },
       { "<leader>gr", "<cmd>Gitsigns reset_hunk<cr>" },
@@ -483,7 +483,7 @@ return {
   },
   {
     "windwp/nvim-autopairs",
-    event = "InsertEnter",
+    lazy = true,
     config = function()
       require("nvim-autopairs").setup()
       local add_not_ft = function(rule, ft)
@@ -495,11 +495,13 @@ return {
       end
       add_not_ft(require("nvim-autopairs").get_rule("'")[1], "racket")
       add_not_ft(require("nvim-autopairs").get_rule("`"), "racket")
+      -- need this when lazy loading
+      require("nvim-autopairs").force_attach()
     end,
   },
   {
     "lukas-reineke/indent-blankline.nvim",
-    event = { "BufReadPost" },
+    event = { "BufReadPost", "BufNewFile" },
     config = function()
       require("indent_blankline").setup({
         char_list = { "|", "¦", "┆", "┊" },

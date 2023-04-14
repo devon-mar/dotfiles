@@ -6,7 +6,10 @@ vim.o.expandtab = true
 vim.o.signcolumn = "number"
 vim.o.number = true
 vim.o.mouse = nil
-vim.opt.termguicolors = true
+vim.o.termguicolors = true
+
+vim.o.list = true
+vim.opt.listchars = { trail = "·", tab = "  →" }
 
 vim.keymap.set("n", "<Leader>h", "<cmd>noh<cr>")
 vim.keymap.set("n", "<leader>y", '"+y')
