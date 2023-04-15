@@ -28,6 +28,8 @@ return {
         "go",
         "json",
         "lua",
+        "markdown",
+        "markdown_inline",
         "python",
         "racket",
         "rust",
