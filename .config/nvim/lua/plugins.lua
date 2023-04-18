@@ -59,16 +59,16 @@ return {
         stages = "fade",
       })
       vim.notify = require("notify")
-      vim.lsp.handlers["window/showMessage"] = function(_, result, ctx)
-        local client = vim.lsp.get_client_by_id(ctx.client_id)
-        local lvl = ({ "ERROR", "WARN", "INFO", "DEBUG" })[result.type]
-        notify(result.message, lvl, {
-          title = "LSP | " .. client.name,
-          timeout = 10000,
-          keep = function()
-            return lvl == "ERROR" or lvl == "WARN"
-          end,
-        })
+      --- https://github.com/rcarriga/nvim-notify/wiki/Usage-Recipes#lsp-status-updates
+      -- table from lsp severity to vim severity.
+      local severity = {
+        "error",
+        "warn",
+        "info",
+        "info", -- map both hint and info to info?
+      }
+      vim.lsp.handlers["window/showMessage"] = function(err, method, params, client_id)
+        vim.notify(method.message, severity[params.type])
       end
     end,
   },
@@ -142,6 +142,7 @@ return {
         settings = {
           gopls = {
             semanticTokens = true,
+            gofumpt = true,
           },
         },
       })
@@ -152,6 +153,17 @@ return {
       lspconfig["ansiblels"].setup({
         on_attach = on_attach,
         capabilities = capabilities,
+        settings = {
+          ansible = {
+            validation = {
+              enabled = true,
+              lint = {
+                enabled = true,
+                path = "~/.local/bin/ansible-lint",
+              },
+            },
+          },
+        },
       })
       lspconfig["yamlls"].setup({
         on_attach = on_attach,
@@ -168,18 +180,30 @@ return {
         on_attach = on_attach,
         capabilities = capabilities,
       })
+
+      --- https://neovim.discourse.group/t/lspinfo-window-border/1566/9
+      require("lspconfig.ui.windows").default_options.border = "rounded"
     end,
   },
   {
     "jose-elias-alvarez/null-ls.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
-    ft = { "python", "yaml", "json", "lua" },
+    ft = {
+      "json",
+      "lua",
+      "python",
+      "racket",
+      "yaml",
+    },
     config = function()
       local null_ls = require("null-ls")
       null_ls.setup({
         on_attach = function(client, bufnr)
           on_attach_common(client, bufnr)
-          if client.supports_method("textDocument/formatting") then
+          if
+            vim.api.nvim_buf_get_option(bufnr, "filetype") ~= "racket"
+            and client.supports_method("textDocument/formatting")
+          then
             vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
             vim.api.nvim_create_autocmd("BufWritePre", {
               group = augroup,
@@ -198,7 +222,12 @@ return {
           -- lua
           null_ls.builtins.formatting.stylua,
 
-          null_ls.builtins.formatting.prettier,
+          null_ls.builtins.formatting.prettier.with({
+            filetypes = { "json", "yaml" },
+          }),
+
+          -- racket
+          null_ls.builtins.formatting.raco_fmt,
         },
       })
     end,
@@ -209,6 +238,7 @@ return {
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
+      "hrsh7th/cmp-nvim-lsp-signature-help",
       "L3MON4D3/LuaSnip",
     },
     event = "InsertEnter",
@@ -314,6 +344,7 @@ return {
           ["<CR>"] = cmp.mapping.confirm({ select = false }),
         }),
         sources = cmp.config.sources({
+          { name = "nvim_lsp_signature_help", priority = 40 },
           { name = "nvim_lsp", priority = 30 },
           { name = "buffer", priority = 20 },
           { name = "path", priority = 10 },
@@ -342,15 +373,18 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope-fzf-native.nvim",
+      "nvim-telescope/telescope-file-browser.nvim",
     },
     cmd = { "Telescope", "EditConfig" },
     keys = {
-      { "<leader>fz", "<cmd>Telescope find_files<cr>" },
+      { "<leader>fb", "<cmd>Telescope buffers<cr>" },
+      { "<leader>fe", "<cmd>Telescope file_browser<cr>" },
+      { "<leader>fE", "<cmd>Telescope file_browser path=%:p:h<cr>" },
       { "<leader>ff", "<cmd>Telescope find_files<cr>" },
       { "<leader>fg", "<cmd>Telescope live_grep<cr>" },
-      { "<leader>fb", "<cmd>Telescope buffers<cr>" },
       { "<leader>fh", "<cmd>Telescope help_tags<cr>" },
       { "<leader>ft", "<cmd>Telescope filetypes<cr>" },
+      { "<leader>fz", "<cmd>Telescope find_files<cr>" },
       { "<leader>gc", "<cmd>Telescope git_bcommits<cr>" },
       { "<leader>lE", "<cmd>Telescope diagnostics<cr>" },
       { "<leader>ls", "<cmd>Telescope lsp_document_symbols" },
@@ -360,6 +394,10 @@ return {
     config = function()
       require("telescope").setup({
         extensions = {
+          file_browser = {
+            --- group files and folders
+            grouped = true,
+          },
           fzf = {
             fuzzy = true,
             override_generic_sorter = true,
@@ -416,6 +454,7 @@ return {
         },
       })
       require("telescope").load_extension("fzf")
+      require("telescope").load_extension("file_browser")
       local telescope = require("telescope.builtin")
       local config_dir = (vim.fn.has("win32") == 1) and "~/AppData/Local/nvim/lua" or "~/.config/nvim"
       vim.api.nvim_create_user_command("EditConfig", function()
