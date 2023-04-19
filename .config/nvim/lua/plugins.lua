@@ -493,14 +493,14 @@ return {
   },
   {
     "akinsho/git-conflict.nvim",
-    event = "VeryLazy",
+    event = { "BufreadPost" },
     config = function()
       require("git-conflict").setup()
     end,
   },
   {
     "numToStr/Comment.nvim",
-    event = "VeryLazy",
+    event = { "BufReadPost", "BufNewFile" },
     config = function()
       require("Comment").setup({ mappings = false })
       vim.keymap.set("n", "<leader>/", function()
