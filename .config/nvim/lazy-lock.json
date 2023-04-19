@@ -20,6 +20,7 @@
   "nvim-ts-rainbow2": { "branch": "master", "commit": "2c82e0965be2baf67fa2d3d48f3747437fde7204" },
   "one_monokai.nvim": { "branch": "main", "commit": "057fc3488a3be1a978315c746ee2ed94592fef84" },
   "plenary.nvim": { "branch": "master", "commit": "9ac3e9541bbabd9d73663d757e4fe48a675bb054" },
+  "scribble.vim": { "branch": "master", "commit": "f96e4bc045daa766b914edfdacb5727afbce7f5d" },
   "telescope-file-browser.nvim": { "branch": "master", "commit": "e0fcb12702ad0d2873544a31730f9aaef04fd032" },
   "telescope-fzf-native.nvim": { "branch": "main", "commit": "580b6c48651cabb63455e97d7e131ed557b8c7e2" },
   "telescope.nvim": { "branch": "master", "commit": "6258d50b09f9ae087317e392efe7c05a7323492d" }

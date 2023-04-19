@@ -387,9 +387,9 @@ return {
       { "<leader>fz", "<cmd>Telescope find_files<cr>" },
       { "<leader>gc", "<cmd>Telescope git_bcommits<cr>" },
       { "<leader>lE", "<cmd>Telescope diagnostics<cr>" },
-      { "<leader>ls", "<cmd>Telescope lsp_document_symbols" },
-      { "<leader>lS", "<cmd>Telescope lsp_workspace_symbols" },
-      { "<leader>lr", "<cmd>Telescope lsp_references" },
+      { "<leader>ls", "<cmd>Telescope lsp_document_symbols<cr>" },
+      { "<leader>lS", "<cmd>Telescope lsp_workspace_symbols<cr>" },
+      { "<leader>lr", "<cmd>Telescope lsp_references<cr>" },
     },
     config = function()
       require("telescope").setup({
@@ -560,5 +560,9 @@ return {
         },
       })
     end,
+  },
+  {
+    "benknoble/scribble.vim",
+    ft = "scribble",
   },
 }
