@@ -172,6 +172,7 @@ return {
           yaml = {
             schemas = {
               ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
+              ["https://json.schemastore.org/clang-format.json"] = ".clang-format",
             },
           },
         },
@@ -536,6 +537,8 @@ return {
       end
       add_not_ft(require("nvim-autopairs").get_rule("'")[1], "racket")
       add_not_ft(require("nvim-autopairs").get_rule("`"), "racket")
+      add_not_ft(require("nvim-autopairs").get_rule("'")[1], "scribble")
+      add_not_ft(require("nvim-autopairs").get_rule("`"), "scribble")
       -- need this when lazy loading
       require("nvim-autopairs").force_attach()
     end,
