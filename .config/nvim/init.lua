@@ -30,6 +30,23 @@ vim.filetype.add({ pattern = { ["~/repos/workstation/.*.yml"] = "yaml.ansible" }
 --- Based on https://unix.stackexchange.com/questions/224771/what-is-the-format-of-the-default-statusline
 vim.opt.statusline = [[%<%f %y%h%m%r%=%{get(b:,"gitsigns_status", "")} %-14.(%l,%c%V%) %P]]
 
+--- Based on https://github.com/neovim/neovim/blob/a8ee4c7a81a8df3fe705e941e7d1c2c9e2f6194e/runtime/lua/editorconfig.lua#L86
+local augroup_trim = vim.api.nvim_create_augroup("trim_trailing_whitespace", { clear = true })
+vim.api.nvim_create_autocmd("BufWritePre", {
+  group = augroup_trim,
+  buffer = bufnr,
+  callback = function()
+    if vim.o.binary or vim.o.filetype == "diff" then
+      return
+    end
+
+    local view = vim.fn.winsaveview()
+    vim.api.nvim_command("silent! undojoin")
+    vim.api.nvim_command("silent keepjumps keeppatterns %s/\\s\\+$//e")
+    vim.fn.winrestview(view)
+  end,
+})
+
 --- https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization#customizing-how-diagnostics-are-displayed
 local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
 for type, icon in pairs(signs) do
