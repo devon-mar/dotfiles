@@ -130,6 +130,13 @@ return {
       lspconfig["rust_analyzer"].setup({
         on_attach = on_attach,
         capabilities = capabilities,
+        settings = {
+          ["rust-analyzer"] = {
+            checkOnSave = {
+              command = "clippy",
+            },
+          },
+        },
       })
       lspconfig["racket_langserver"].setup({
         cmd = { "xvfb-run", "racket", "--lib", "racket-langserver" },
@@ -190,11 +197,13 @@ return {
     "jose-elias-alvarez/null-ls.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
     ft = {
+      "html",
       "json",
       "lua",
       "python",
       "racket",
       "yaml",
+      "yaml.ansible",
     },
     config = function()
       local null_ls = require("null-ls")
@@ -219,12 +228,14 @@ return {
           --- python
           null_ls.builtins.formatting.isort,
           null_ls.builtins.formatting.black,
+          null_ls.builtins.diagnostics.flake8,
+          null_ls.builtins.diagnostics.mypy,
 
           -- lua
           null_ls.builtins.formatting.stylua,
 
           null_ls.builtins.formatting.prettier.with({
-            filetypes = { "json", "yaml" },
+            filetypes = { "json", "yaml", "yaml.ansible", "html" },
           }),
 
           -- racket
