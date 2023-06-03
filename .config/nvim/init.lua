@@ -20,6 +20,7 @@ vim.keymap.set("n", "<leader>p", '"+p')
 vim.keymap.set("n", "<leader>vs", function()
   vim.opt_local.spell = not (vim.opt_local.spell:get())
 end)
+vim.keymap.set("n", "<leader>vp", "<cmd>set paste!<cr>")
 
 --- https://stackoverflow.com/questions/676600/vim-search-and-replace-selected-text
 vim.keymap.set("v", "<C-r>", '"hy:%s/<C-r>h//g<left><left>')
