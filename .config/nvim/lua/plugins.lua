@@ -26,6 +26,7 @@ return {
       ensure_installed = {
         "c",
         "go",
+        "hcl",
         "json",
         "lua",
         "markdown",
@@ -33,6 +34,7 @@ return {
         "python",
         "racket",
         "rust",
+        "terraform",
         "vim",
         "vimdoc",
         "yaml",
@@ -188,6 +190,10 @@ return {
         on_attach = on_attach,
         capabilities = capabilities,
       })
+      lspconfig["terraform_lsp"].setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+      })
 
       --- https://neovim.discourse.group/t/lspinfo-window-border/1566/9
       require("lspconfig.ui.windows").default_options.border = "rounded"
@@ -202,6 +208,7 @@ return {
       "lua",
       "python",
       "racket",
+      "terraform",
       "yaml",
       "yaml.ansible",
     },
@@ -240,6 +247,9 @@ return {
 
           -- racket
           null_ls.builtins.formatting.raco_fmt,
+
+          -- terraform
+          null_ls.builtins.formatting.terraform_fmt,
         },
       })
     end,
