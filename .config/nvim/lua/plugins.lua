@@ -409,7 +409,7 @@ return {
     cmd = { "Telescope", "EditConfig" },
     keys = {
       { "<leader>fb", "<cmd>Telescope buffers<cr>" },
-      { "<C-s>", "<cmd>Telescope buffers<cr>" },
+      { "<leader>b", "<cmd>Telescope buffers<cr>" },
       { "<leader>fe", "<cmd>Telescope file_browser<cr>" },
       { "<leader>fE", "<cmd>Telescope file_browser path=%:p:h<cr>" },
       { "<leader>ff", "<cmd>Telescope find_files<cr>" },
