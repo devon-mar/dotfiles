@@ -441,6 +441,7 @@ return {
           file_ignore_patterns = { "^.git/" },
         },
         pickers = {
+          lsp_document_symbols = { symbol_width = 50 },
           find_files = {
             hidden = true,
             file_ignore_patterns = {
