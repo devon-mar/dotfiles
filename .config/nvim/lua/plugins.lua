@@ -202,6 +202,7 @@ return {
       lspconfig["terraform_lsp"].setup({
         on_attach = on_attach,
         capabilities = capabilities,
+        filetypes = { "terraform" },
       })
 
       --- https://neovim.discourse.group/t/lspinfo-window-border/1566/9
