@@ -426,6 +426,8 @@ return {
       { "<leader>ls", "<cmd>Telescope lsp_document_symbols<cr>" },
       { "<leader>lS", "<cmd>Telescope lsp_workspace_symbols<cr>" },
       { "<leader>lr", "<cmd>Telescope lsp_references<cr>" },
+      { "<leader>ls", "<cmd>Telescope search_history<cr>" },
+      { "<leader>lh", "<cmd>Telescope resume<cr>" },
     },
     config = function()
       require("telescope").setup({
@@ -443,6 +445,13 @@ return {
         },
         defaults = {
           file_ignore_patterns = { "^.git/" },
+          mappings = {
+            i = {
+              -- :h telescope.defaults.history
+              ["<C-Down>"] = require("telescope.actions").cycle_history_next,
+              ["<C-Up>"] = require("telescope.actions").cycle_history_prev,
+            },
+          },
         },
         pickers = {
           lsp_document_symbols = { symbol_width = 50 },
