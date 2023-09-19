@@ -19,6 +19,7 @@ return {
     "nvim-treesitter/nvim-treesitter",
     dependencies = { "HiPhish/nvim-ts-rainbow2" },
     event = { "BufReadPost", "BufNewFile" },
+    cmd = { "TSInstall", "TSUpdate", "TSUpdateSync" },
     build = function()
       require("nvim-treesitter.install").update({ with_sync = true })
     end,
