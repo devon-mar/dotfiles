@@ -16,8 +16,36 @@ return {
     opts = { transparent = true },
   },
   {
+    "HiPhish/rainbow-delimiters.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    event = { "BufReadPost", "BufNewFile" },
+    config = function()
+      local rainbow_delimiters = require("rainbow-delimiters")
+
+      vim.g.rainbow_delimiters = {
+        whitelist = { "c" },
+        strategy = {
+          [""] = rainbow_delimiters.strategy["global"],
+          commonlisp = rainbow_delimiters.strategy["local"],
+        },
+        query = {
+          [""] = "rainbow-delimiters",
+          lua = "rainbow-blocks",
+        },
+        highlight = {
+          "RainbowDelimiterRed",
+          "RainbowDelimiterYellow",
+          "RainbowDelimiterBlue",
+          "RainbowDelimiterOrange",
+          "RainbowDelimiterGreen",
+          "RainbowDelimiterViolet",
+          "RainbowDelimiterCyan",
+        },
+      }
+    end,
+  },
+  {
     "nvim-treesitter/nvim-treesitter",
-    dependencies = { "HiPhish/nvim-ts-rainbow2" },
     event = { "BufReadPost", "BufNewFile" },
     cmd = { "TSInstall", "TSUpdate", "TSUpdateSync" },
     build = function()
@@ -46,9 +74,6 @@ return {
         additional_vim_regex_highlighting = false,
       },
       indent = {
-        enable = true,
-      },
-      rainbow = {
         enable = true,
       },
       incremental_selection = {
