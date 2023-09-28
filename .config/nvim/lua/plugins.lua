@@ -23,10 +23,10 @@ return {
       local rainbow_delimiters = require("rainbow-delimiters")
 
       vim.g.rainbow_delimiters = {
-        whitelist = { "c" },
+        whitelist = { "c", "racket" },
         strategy = {
           [""] = rainbow_delimiters.strategy["global"],
-          commonlisp = rainbow_delimiters.strategy["local"],
+          -- racket = rainbow_delimiters.strategy["local"],
         },
         query = {
           [""] = "rainbow-delimiters",
@@ -57,6 +57,7 @@ return {
         "go",
         "hcl",
         "json",
+        "latex",
         "lua",
         "markdown",
         "markdown_inline",
