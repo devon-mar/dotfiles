@@ -8,6 +8,8 @@ vim.o.number = true
 vim.o.mouse = nil
 vim.o.termguicolors = true
 
+vim.g.netrw_scp_cmd = "scp -q -O"
+
 vim.o.list = true
 vim.opt.listchars = { trail = "·", tab = "  →" }
 
