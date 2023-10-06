@@ -619,11 +619,10 @@ return {
   {
     "lukas-reineke/indent-blankline.nvim",
     event = { "BufReadPost", "BufNewFile" },
-    config = function()
-      require("indent_blankline").setup({
-        char_list = { "|", "¦", "┆", "┊" },
-      })
-    end,
+    main = "ibl",
+    opts = {
+      indent = { char = { "|", "¦", "┆", "┊" } },
+    },
   },
   {
     "j-hui/fidget.nvim",
