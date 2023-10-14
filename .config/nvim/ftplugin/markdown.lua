@@ -14,5 +14,5 @@ vim.api.nvim_buf_create_user_command(0, "PandocEnable", function()
 end, { nargs = 0 })
 
 vim.wo.wrap = true
-vim.o.textwidth = 120
+vim.o.textwidth = 100
 vim.opt_local.spell = true
