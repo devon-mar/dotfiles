@@ -23,7 +23,7 @@ return {
       local rainbow_delimiters = require("rainbow-delimiters")
 
       vim.g.rainbow_delimiters = {
-        whitelist = { "c", "racket" },
+        whitelist = { "c" },
         strategy = {
           [""] = rainbow_delimiters.strategy["global"],
           -- racket = rainbow_delimiters.strategy["local"],
@@ -622,6 +622,7 @@ return {
     main = "ibl",
     opts = {
       indent = { char = { "|", "¦", "┆", "┊" } },
+      scope = { show_start = false, show_end = false },
     },
   },
   {
