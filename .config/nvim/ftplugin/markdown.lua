@@ -1,8 +1,8 @@
 -- vim.keymap.set("n", "<leader>bp", ":!pandoc % -o " .. vim.fn.expand("%:r") .. ".pdf<CR>", { noremap = true })
-local augroup = vim.api.nvim_create_augroup("PandocPDF", {})
+local augroup = vim.api.nvim_create_augroup("PandocPDF", { clear = false })
 
 vim.api.nvim_buf_create_user_command(0, "PandocEnable", function()
-  vim.api.nvim_clear_autocmds({ group = augroup })
+  vim.api.nvim_clear_autocmds({ group = augroup, buffer = 0 })
   vim.api.nvim_create_autocmd("BufWritePost", {
     group = augroup,
     buffer = 0,
