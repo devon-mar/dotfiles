@@ -6,8 +6,17 @@ vim.api.nvim_buf_create_user_command(0, "Pdflatex", function()
     group = augroup,
     buffer = 0,
     callback = function()
-      local output = vim.fn.system({ "pdflatex", "-interaction=nonstopmode", vim.fn.expand("%:p") })
-      vim.notify("pdflatex exited with code " .. vim.v.shell_error .. ": " .. output)
+      local output = vim.fn.system({
+        "pdflatex",
+        "-interaction=nonstopmode",
+        "-output-directory=" .. vim.fn.expand("%:p:h"),
+        vim.fn.expand("%:p"),
+      })
+      if vim.v.shell_error == 0 then
+        vim.notify("compiled successfully")
+      else
+        vim.notify("pdflatex exited with code " .. vim.v.shell_error .. ": " .. output)
+      end
     end,
   })
 end, { nargs = 0 })
