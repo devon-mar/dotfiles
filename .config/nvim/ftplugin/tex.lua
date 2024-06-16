@@ -9,7 +9,8 @@ vim.api.nvim_buf_create_user_command(0, "Pdflatex", function()
       local output = vim.fn.system({
         "pdflatex",
         "-interaction=nonstopmode",
-        "-output-directory=" .. vim.fn.expand("%:p:h"),
+        "-output-directory",
+        vim.fn.expand("%:p:h"),
         vim.fn.expand("%:p"),
       })
       if vim.v.shell_error == 0 then
