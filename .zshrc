@@ -110,6 +110,14 @@ source $ZSH/oh-my-zsh.sh
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+set -o vi
+# bindkey -M emacs
+bindkey "^R" history-incremental-search-backward
+bindkey "^S" history-incremental-search-forward
+bindkey "^A" beginning-of-line
+bindkey "^E" end-of-line
+bindkey "^U" kill-whole-line
+
 # Created by `pipx` on 2022-01-15 20:47:37
 export PATH="$PATH:$HOME/.local/bin"
 export PATH="$PATH:/usr/local/go/bin"
