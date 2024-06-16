@@ -117,6 +117,8 @@ return {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     config = function()
+      local augroup = vim.api.nvim_create_augroup("LSPFormat", {})
+
       local on_attach = function(client, bufnr)
         on_attach_common(client, bufnr)
         local bufopts = { noremap = true, silent = true, buffer = bufnr }
@@ -134,6 +136,21 @@ return {
             source = "always",
           })
         end, bufopts)
+
+        -- https://github.com/astral-sh/ruff/blob/main/crates/ruff_server/docs/setup/NEOVIM.md
+        if client.name == "ruff" then
+          -- Disable hover in favor of Pyright
+          client.server_capabilities.hoverProvider = false
+
+          vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+          vim.api.nvim_create_autocmd("BufWritePre", {
+            group = augroup,
+            buffer = bufnr,
+            callback = function()
+              vim.lsp.buf.format()
+            end,
+          })
+        end
 
         --- https://github.com/golang/go/issues/54531#issuecomment-1464982242
         if client.name == "gopls" and not client.server_capabilities.semanticTokensProvider then
@@ -228,11 +245,21 @@ return {
       lspconfig["pyright"].setup({
         on_attach = on_attach,
         capabilities = capabilities,
+        settings = {
+          pyright = {
+            -- Using Ruff's import organizer
+            disableOrganizeImports = true,
+          },
+        },
       })
       lspconfig["terraform_lsp"].setup({
         on_attach = on_attach,
         capabilities = capabilities,
         filetypes = { "terraform" },
+      })
+      lspconfig["ruff"].setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
       })
 
       --- https://neovim.discourse.group/t/lspinfo-window-border/1566/9
@@ -274,9 +301,6 @@ return {
         end,
         sources = {
           --- python
-          null_ls.builtins.formatting.isort,
-          null_ls.builtins.formatting.black,
-          null_ls.builtins.diagnostics.flake8,
           null_ls.builtins.diagnostics.mypy,
 
           -- lua
