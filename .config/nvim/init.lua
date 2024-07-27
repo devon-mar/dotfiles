@@ -85,4 +85,5 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup("plugins", {
   ui = { border = "rounded" },
   install = { colorscheme = { "one_monokai" } },
+  rocks = { enabled = false },
 })
