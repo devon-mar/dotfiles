@@ -55,6 +55,23 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   end,
 })
 
+-- use relative line numbers in normal mode
+local augroup_linenum = vim.api.nvim_create_augroup("linenum", { clear = true })
+vim.api.nvim_create_autocmd("InsertEnter", {
+  group = augroup_linenum,
+  buffer = bufnr,
+  callback = function()
+    vim.o.relativenumber = false
+  end,
+})
+vim.api.nvim_create_autocmd("InsertLeave", {
+  group = augroup_linenum,
+  buffer = bufnr,
+  callback = function()
+    vim.o.relativenumber = true
+  end,
+})
+
 --- https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization#customizing-how-diagnostics-are-displayed
 local signs = { Error = "󰅚 ", Warn = " ", Hint = "󰌶 ", Info = " " }
 for type, icon in pairs(signs) do
