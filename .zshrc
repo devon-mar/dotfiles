@@ -9,7 +9,8 @@ fi
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=$HOME/.oh-my-zsh
+source "$ZSH/oh-my-zsh.sh"
+source source-p10k
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -79,8 +80,6 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git)
 
-source $ZSH/oh-my-zsh.sh
-
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -107,9 +106,6 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
 set -o vi
 # bindkey -M emacs
 bindkey "^R" history-incremental-search-backward
@@ -118,47 +114,12 @@ bindkey "^A" beginning-of-line
 bindkey "^E" end-of-line
 bindkey "^U" kill-whole-line
 
-# Created by `pipx` on 2022-01-15 20:47:37
 export PATH="$PATH:$HOME/.local/bin"
-export PATH="$PATH:/usr/local/go/bin"
-export PATH="$PATH:$HOME/go/bin"
-export PATH="$PATH:/usr/local/neovim/bin"
-
-[ -f ~/.cargo/env ] && source "$HOME/.cargo/env"
-
-# WSL SSH and GPG
-if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null; then
-  export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
-  if ! ss -a | grep -q "$SSH_AUTH_SOCK"; then
-    rm -f "$SSH_AUTH_SOCK"
-    wsl2_ssh_pageant_bin="$HOME/.ssh/wsl2-ssh-pageant.exe"
-    if test -x "$wsl2_ssh_pageant_bin"; then
-      (setsid nohup socat UNIX-LISTEN:"$SSH_AUTH_SOCK,fork" EXEC:"$wsl2_ssh_pageant_bin" >/dev/null 2>&1 &)
-    else
-      echo >&2 "WARNING: $wsl2_ssh_pageant_bin is not executable."
-    fi
-    unset wsl2_ssh_pageant_bin
-  fi
-
-  export GPG_AGENT_SOCK="$HOME/.gnupg/S.gpg-agent"
-  if ! ss -a | grep -q "$GPG_AGENT_SOCK"; then
-    rm -rf "$GPG_AGENT_SOCK"
-    wsl2_ssh_pageant_bin="$HOME/.ssh/wsl2-ssh-pageant.exe"
-    if test -x "$wsl2_ssh_pageant_bin"; then
-      (setsid nohup socat UNIX-LISTEN:"$GPG_AGENT_SOCK,fork" EXEC:"$wsl2_ssh_pageant_bin --gpg S.gpg-agent" >/dev/null 2>&1 &)
-    else
-      echo >&2 "WARNING: $wsl2_ssh_pageant_bin is not executable."
-    fi
-    unset wsl2_ssh_pageant_bin
-  fi
-fi
 
 [ -f "$HOME/.zshrc-local" ] && source "$HOME/.zshrc-local"
 
-# NVM
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
 alias vi="nvim"
 alias vim="nvim"
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
