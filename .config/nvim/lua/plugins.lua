@@ -478,7 +478,7 @@ return {
       { "<leader>ls", "<cmd>Telescope lsp_document_symbols<cr>" },
       { "<leader>lS", "<cmd>Telescope lsp_workspace_symbols<cr>" },
       { "<leader>lr", "<cmd>Telescope lsp_references<cr>" },
-      { "<leader>ls", "<cmd>Telescope search_history<cr>" },
+      { "<leader>lH", "<cmd>Telescope search_history<cr>" },
       { "<leader>lh", "<cmd>Telescope resume<cr>" },
     },
     config = function()
