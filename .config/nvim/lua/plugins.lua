@@ -224,7 +224,6 @@ return {
               enabled = true,
               lint = {
                 enabled = true,
-                path = "~/.local/bin/ansible-lint",
               },
             },
           },
@@ -554,9 +553,9 @@ return {
       require("telescope").load_extension("fzf")
       require("telescope").load_extension("file_browser")
       local telescope = require("telescope.builtin")
-      local config_dir = (vim.fn.has("win32") == 1) and "~/AppData/Local/nvim/lua" or "~/.config/nvim"
+      local config_dir = vim.fn.stdpath("config")
       vim.api.nvim_create_user_command("EditConfig", function()
-        telescope.find_files({ cwd = config_dir })
+        telescope.find_files({ cwd = config_dir, follow = true })
       end, { nargs = 0 })
     end,
   },
