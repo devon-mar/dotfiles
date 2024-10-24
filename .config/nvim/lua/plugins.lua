@@ -260,6 +260,10 @@ return {
         on_attach = on_attach,
         capabilities = capabilities,
       })
+      lspconfig["jsonls"].setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+      })
 
       --- https://neovim.discourse.group/t/lspinfo-window-border/1566/9
       require("lspconfig.ui.windows").default_options.border = "rounded"
@@ -668,10 +672,9 @@ return {
   {
     "iamcco/markdown-preview.nvim",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-    build = "cd app && npm install",
-    init = function()
-      vim.g.mkdp_filetypes = { "markdown" }
-    end,
     ft = { "markdown" },
+    build = function()
+      vim.fn["mkdp#util#install"]()
+    end,
   },
 }
