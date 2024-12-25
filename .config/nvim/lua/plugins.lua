@@ -57,7 +57,6 @@ return {
         "go",
         "hcl",
         "json",
-        "latex",
         "lua",
         "markdown",
         "markdown_inline",
@@ -457,6 +456,9 @@ return {
     "nvim-telescope/telescope-fzf-native.nvim",
     lazy = true,
     build = "make",
+    cond = function()
+      return not(vim.loop.os_uname().sysname:find("Windows") and true or false)
+    end,
   },
   {
     "nvim-telescope/telescope.nvim",
