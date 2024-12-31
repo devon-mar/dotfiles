@@ -457,7 +457,7 @@ return {
     lazy = true,
     build = "make",
     cond = function()
-      return not(vim.loop.os_uname().sysname:find("Windows") and true or false)
+      return not (vim.loop.os_uname().sysname:find("Windows") and true or false)
     end,
   },
   {
