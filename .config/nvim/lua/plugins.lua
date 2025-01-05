@@ -13,7 +13,24 @@ return {
     "cpea2506/one_monokai.nvim",
     lazy = false,
     priority = 1000,
-    opts = { transparent = true },
+    opts = {
+      transparent = true,
+      themes = function(colours)
+        return {
+          -- Use undercurl instead of underline for DiagnosticUnderline*
+          DiagnosticUnderlineError = { sp = colours.red, undercurl = true },
+          DiagnosticUnderlineHint = { sp = colours.light_gray, undercurl = true },
+          DiagnosticUnderlineInfo = { sp = colours.green, undercurl = true },
+          DiagnosticUnderlineWarn = { sp = colours.yellow, undercurl = true },
+
+          -- Spell
+          SpellBad = { sp = colours.red, undercurl = true },
+          SpellCap = { sp = colours.yellow, undercurl = true },
+          SpellLocal = { sp = colours.green, undercurl = true },
+          SpellHint = { sp = colours.light_gray, undercurl = true },
+        }
+      end,
+    },
   },
   {
     "HiPhish/rainbow-delimiters.nvim",
