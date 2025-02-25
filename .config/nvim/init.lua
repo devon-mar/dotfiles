@@ -29,6 +29,8 @@ vim.keymap.set("n", "<leader>vs", function()
   vim.opt_local.spell = not (vim.opt_local.spell:get())
 end)
 vim.keymap.set("n", "<leader>vp", "<cmd>set paste!<cr>")
+vim.keymap.set("n", "<leader>cn", "<cmd>:cnext<cr>")
+vim.keymap.set("n", "<leader>cp", "<cmd>:cprevious<cr>")
 
 --- https://stackoverflow.com/questions/676600/vim-search-and-replace-selected-text
 vim.keymap.set("v", "<C-r>", '"hy:%s/\\V<C-r>h//g<left><left>')
@@ -103,4 +105,27 @@ require("lazy").setup("plugins", {
   ui = { border = "rounded" },
   install = { colorscheme = { "one_monokai" } },
   rocks = { enabled = false },
+})
+
+function go_test_swap(open_fn)
+  local buf_name = vim.api.nvim_buf_get_name(0)
+  local without_extn = string.sub(buf_name, 1, -4)
+
+  if string.sub(without_extn, -5, -1) == "_test" then
+    open_fn(string.sub(without_extn, 1, -6) .. ".go")
+  else
+    open_fn(without_extn .. "_test.go")
+  end
+end
+
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  pattern = { "*.go" },
+  callback = function(ev)
+    vim.keymap.set("n", "<leader>fs", function()
+      go_test_swap(vim.cmd.edit)
+    end)
+    vim.keymap.set("n", "<leader>fS", function()
+      go_test_swap(vim.cmd.vsplit)
+    end)
+  end,
 })
