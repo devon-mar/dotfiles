@@ -589,6 +589,7 @@ return {
       { "<leader>gp", "<cmd>Gitsigns preview_hunk<cr>" },
       { "<leader>gr", "<cmd>Gitsigns reset_hunk<cr>" },
       { "<leader>gd", "<cmd>Gitsigns diffthis<cr>" },
+      { "<leader>gb", "<cmd>Gitsigns blame_line<cr>" },
     },
     config = function()
       require("gitsigns").setup({
