@@ -15,14 +15,8 @@ return {
     priority = 1000,
     opts = {
       transparent = true,
-      themes = function(colours)
+      highlights = function(colours)
         return {
-          -- Use undercurl instead of underline for DiagnosticUnderline*
-          DiagnosticUnderlineError = { sp = colours.red, undercurl = true },
-          DiagnosticUnderlineHint = { sp = colours.light_gray, undercurl = true },
-          DiagnosticUnderlineInfo = { sp = colours.green, undercurl = true },
-          DiagnosticUnderlineWarn = { sp = colours.yellow, undercurl = true },
-
           -- Spell
           SpellBad = { sp = colours.red, undercurl = true },
           SpellCap = { sp = colours.yellow, undercurl = true },
@@ -306,7 +300,7 @@ return {
           on_attach_common(client, bufnr)
           if
             vim.api.nvim_buf_get_option(bufnr, "filetype") ~= "racket"
-            and client.supports_method("textDocument/formatting")
+            and client:supports_method("textDocument/formatting")
           then
             vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
             vim.api.nvim_create_autocmd("BufWritePre", {
