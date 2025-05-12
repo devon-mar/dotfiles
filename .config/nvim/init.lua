@@ -22,8 +22,7 @@ vim.opt.listchars = { trail = "·", tab = "  →" }
 vim.o.spelllang = "en_ca"
 
 vim.keymap.set("n", "<Leader>h", "<cmd>noh<cr>")
-vim.keymap.set("n", "<leader>y", '"+y')
-vim.keymap.set("v", "<leader>y", '"+y')
+vim.keymap.set({ "n", "v" }, "<leader>y", '"+y')
 vim.keymap.set("n", "<leader>p", '"+p')
 vim.keymap.set("n", "<leader>vs", function()
   vim.opt_local.spell = not (vim.opt_local.spell:get())
