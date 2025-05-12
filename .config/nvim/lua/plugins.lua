@@ -496,6 +496,7 @@ return {
       { "<leader>lr", "<cmd>Telescope lsp_references<cr>" },
       { "<leader>lH", "<cmd>Telescope search_history<cr>" },
       { "<leader>lh", "<cmd>Telescope resume<cr>" },
+      { "<F7>", "<cmd>Telescope spell_suggest<cr>" },
     },
     config = function()
       require("telescope").setup({
