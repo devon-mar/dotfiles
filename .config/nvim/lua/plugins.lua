@@ -8,6 +8,8 @@ function on_attach_common(client, bufnr)
   vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, bufopts)
 end
 
+local is_not_windows = not (vim.loop.os_uname().sysname:find("Windows") and true or false)
+
 return {
   {
     "cpea2506/one_monokai.nvim",
@@ -445,9 +447,7 @@ return {
     "nvim-telescope/telescope-fzf-native.nvim",
     lazy = true,
     build = "make",
-    cond = function()
-      return not (vim.loop.os_uname().sysname:find("Windows") and true or false)
-    end,
+    cond = is_not_windows,
   },
   {
     "nvim-telescope/telescope.nvim",
@@ -546,7 +546,9 @@ return {
           },
         },
       })
-      require("telescope").load_extension("fzf")
+      if is_not_windows then
+        require("telescope").load_extension("fzf")
+      end
       require("telescope").load_extension("file_browser")
       local telescope = require("telescope.builtin")
       local config_dir = vim.fn.stdpath("config")
