@@ -194,10 +194,7 @@ return {
 
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-      local lspconfig = require("lspconfig")
-      lspconfig["rust_analyzer"].setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
+      vim.lsp.config("rust_analyzer", {
         settings = {
           ["rust-analyzer"] = {
             checkOnSave = {
@@ -206,14 +203,9 @@ return {
           },
         },
       })
-      lspconfig["racket_langserver"].setup({
-        cmd = { "xvfb-run", "racket", "--lib", "racket-langserver" },
-        on_attach = on_attach,
-        capabilities = capabilities,
-      })
-      lspconfig["gopls"].setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
+      vim.lsp.enable("rust_analyzer")
+
+      vim.lsp.config("gopls", {
         settings = {
           gopls = {
             semanticTokens = true,
@@ -221,59 +213,45 @@ return {
           },
         },
       })
-      lspconfig["clangd"].setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-      })
-      lspconfig["ansiblels"].setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-        settings = {
-          ansible = {
-            validation = {
+      vim.lsp.enable("gopls")
+
+      vim.lsp.enable("clangd")
+
+      vim.lsp.config("ansiblels", {
+        ansible = {
+          validation = {
+            enabled = true,
+            lint = {
               enabled = true,
-              lint = {
-                enabled = true,
-              },
             },
           },
         },
       })
-      lspconfig["yamlls"].setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-        settings = {
-          yaml = {
-            schemas = {
-              ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
-              ["https://json.schemastore.org/clang-format.json"] = ".clang-format",
-            },
+      vim.lsp.enable("ansiblels")
+
+      vim.lsp.config("yamlls", {
+        yaml = {
+          schemas = {
+            ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
+            ["https://json.schemastore.org/clang-format.json"] = ".clang-format",
           },
         },
       })
-      lspconfig["pyright"].setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-        settings = {
-          pyright = {
-            -- Using Ruff's import organizer
-            disableOrganizeImports = true,
-          },
+      vim.lsp.enable("yamlls")
+
+      vim.lsp.config("pyright", {
+        pyright = {
+          -- Using Ruff's import organizer
+          disableOrganizeImports = true,
         },
       })
-      lspconfig["terraform_lsp"].setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-        filetypes = { "terraform" },
-      })
-      lspconfig["ruff"].setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-      })
-      lspconfig["jsonls"].setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-      })
+      vim.lsp.enable("pyright")
+
+      vim.lsp.enable("ruff")
+
+      vim.lsp.enable("terraform_lsp")
+
+      vim.lsp.enable("jsonls")
 
       --- https://neovim.discourse.group/t/lspinfo-window-border/1566/9
       require("lspconfig.ui.windows").default_options.border = "rounded"
