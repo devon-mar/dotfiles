@@ -175,6 +175,13 @@ return {
         end
       end
 
+      vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(ev)
+          local client = vim.lsp.get_client_by_id(ev.data.client_id)
+          on_attach(client, ev.buffer)
+        end,
+      })
+
       --- border stuff
       -- https://github.com/neovim/neovim/blob/2b35de386ee8854e1012feb4a6cc53b099220677/src/nvim/api/win_config.c#L452
       local border = {
