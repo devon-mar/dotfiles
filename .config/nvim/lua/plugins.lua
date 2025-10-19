@@ -155,6 +155,9 @@ return {
           client.server_capabilities.hoverProvider = false
 
           vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+        end
+
+        if client.name == "ruff" or client.name == "rust-analyzer" then
           vim.api.nvim_create_autocmd("BufWritePre", {
             group = augroup,
             buffer = bufnr,
