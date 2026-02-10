@@ -17,6 +17,7 @@ vim.g.loaded_perl_provider = 0
 vim.g.loaded_ruby_provider = 0
 
 vim.o.list = true
+vim.o.winborder = "rounded"
 vim.opt.listchars = { trail = "·", tab = "  →" }
 
 vim.o.spelllang = "en_ca"
