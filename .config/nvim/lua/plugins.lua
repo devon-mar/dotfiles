@@ -166,16 +166,6 @@ return {
             end,
           })
         end
-
-        --- https://github.com/golang/go/issues/54531#issuecomment-1464982242
-        if client.name == "gopls" and not client.server_capabilities.semanticTokensProvider then
-          local semantic = client.config.capabilities.textDocument.semanticTokens
-          client.server_capabilities.semanticTokensProvider = {
-            full = true,
-            legend = { tokenModifiers = semantic.tokenModifiers, tokenTypes = semantic.tokenTypes },
-            range = true,
-          }
-        end
       end
 
       vim.api.nvim_create_autocmd("LspAttach", {
