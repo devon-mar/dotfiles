@@ -295,9 +295,6 @@ return {
           end
         end,
         sources = {
-          --- python
-          null_ls.builtins.diagnostics.mypy,
-
           -- lua
           null_ls.builtins.formatting.stylua,
 
