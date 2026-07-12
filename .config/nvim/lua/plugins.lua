@@ -197,6 +197,7 @@ return {
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
       vim.lsp.config("rust_analyzer", {
+        capabilities = capabilities,
         settings = {
           ["rust-analyzer"] = {
             check = {
@@ -208,6 +209,7 @@ return {
       vim.lsp.enable("rust_analyzer")
 
       vim.lsp.config("gopls", {
+        capabilities = capabilities,
         settings = {
           gopls = {
             semanticTokens = true,
